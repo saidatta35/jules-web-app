@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter.ttk import Style # Import Style
 import os
 
 # --- Import UI setup functions ---
@@ -105,5 +106,36 @@ if __name__ == "__main__":
         os.makedirs(reports_dir, exist_ok=True)
 
     root = tk.Tk()
+
+    # --- ttk Theme Selection ---
+    style = Style(root) # Pass root to Style constructor for it to apply to this Tk instance
+    available_themes = style.theme_names()
+    print(f"Available ttk themes: {available_themes}")
+
+    chosen_theme = "none (default)" # Default if no theme is explicitly set or found
+
+    # Try preferred themes
+    preferred_themes_order = ['clam', 'alt', 'default', 'classic'] # Add more if desired
+
+    for theme in preferred_themes_order:
+        if theme in available_themes:
+            try:
+                style.theme_use(theme)
+                chosen_theme = theme
+                print(f"Successfully applied ttk theme: {chosen_theme}")
+                break # Theme applied, exit loop
+            except tk.TclError:
+                print(f"Failed to apply theme {theme}, trying next.")
+                continue
+
+    if chosen_theme == "none (default)" and available_themes: # Fallback if preferred not found
+        try:
+            style.theme_use(available_themes[0])
+            chosen_theme = available_themes[0]
+            print(f"Applied first available ttk theme as fallback: {chosen_theme}")
+        except tk.TclError:
+             print(f"Failed to apply any available theme. Using system default.")
+
+
     app = RiceTradingApp(root, DEFAULT_DB_PATH) # Pass the db_path to the app
     root.mainloop()

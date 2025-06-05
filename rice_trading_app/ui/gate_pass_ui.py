@@ -218,16 +218,15 @@ def setup_gate_pass_ui(parent_window, db_path): # Added db_path
 
     main_frame.order_item_frames = []
 
-    def add_new_item_ui():
-        # Pass db_path to OrderDetailFrame if it needs it for some internal logic (e.g. fetching lot details)
-        # Currently, it's passed as db_path_for_recalc_ref but not used directly in recalc by OrderDetailFrame itself
+    def add_new_item_ui_local(): # Renamed to avoid confusion, will be assigned to main_frame
         item_frame = OrderDetailFrame(scrollable_frame, remove_item_ui, main_frame.db_path)
         item_frame.grid(sticky='ew', pady=2)
         main_frame.order_item_frames.append(item_frame)
         main_frame.recalculate_and_display_totals()
-        # Scroll to bottom
         items_canvas.update_idletasks()
         items_canvas.yview_moveto(1.0)
+
+    main_frame.add_new_item_ui_method = add_new_item_ui_local # Attach to main_frame
 
 
     def remove_item_ui(item_frame_to_remove):
@@ -235,12 +234,11 @@ def setup_gate_pass_ui(parent_window, db_path): # Added db_path
             item_frame_to_remove.destroy()
             main_frame.order_item_frames.remove(item_frame_to_remove)
             main_frame.recalculate_and_display_totals()
-            # Update scrollregion after item removal
             scrollable_frame.update_idletasks()
             items_canvas.configure(scrollregion=items_canvas.bbox("all"))
 
 
-    add_item_button = ttk.Button(order_details_frame, text="Add Item", command=add_new_item_ui)
+    add_item_button = ttk.Button(order_details_frame, text="Add Item", command=main_frame.add_new_item_ui_method) # Use attached method
     add_item_button.grid(row=1, column=0, pady=5, sticky="ew")
 
     # --- Charges Input Frame ---
@@ -321,7 +319,7 @@ def setup_gate_pass_ui(parent_window, db_path): # Added db_path
 
 
     # Add one initial item & initial calculation
-    add_new_item_ui()
+    main_frame.add_new_item_ui_method() # Use attached method
 
 def clear_gate_pass_form(mf): # mf is main_frame
     mf.date_entry.delete(0, tk.END)
