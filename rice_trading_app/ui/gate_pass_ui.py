@@ -354,13 +354,13 @@ def clear_gate_pass_form(mf): # mf is main_frame
     # A robust clear would ensure one item frame exists.
     # For now, if order_item_frames is empty, the form is clear of items.
     # The next add_new_item_ui call (via button) would repopulate.
-    if not mf.order_item_frames: # If user somehow removed all items (not default behavior)
+        if not mf.order_item_frames: # If user somehow removed all items (not default behavior)
         # We need a way to call add_new_item_ui here.
         # This is tricky because add_new_item_ui is nested.
         # A simpler solution: the "Add Item" button is always there.
         # Or, ensure clear_gate_pass_form is always followed by adding one item if none exist.
         # For now, we assume the user will use "Add Item" if the list is empty.
-        pass # Or explicitly call the add_new_item_ui if it were available globally or on mf
+         pass # Or explicitly call the add_new_item_ui if it were available globally or on mf
 
 
     mf.recalculate_and_display_totals() # Reset totals display

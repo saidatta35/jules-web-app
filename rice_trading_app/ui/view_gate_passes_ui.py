@@ -49,9 +49,9 @@ def display_gate_pass_details(gate_pass_id, parent_window, db_path): # Added db_
         gp_data = cursor.fetchone()
 
         if not gp_data:
-        messagebox.showerror("Error", f"Could not find Gate Pass with ID {gate_pass_id}", parent=details_window)
-            details_window.destroy()
-            return
+         messagebox.showerror("Error", f"Could not find Gate Pass with ID {gate_pass_id}", parent=details_window)
+        details_window.destroy()
+        return
 
         fields_to_display = [
             ("Gate Pass ID:", gp_data["gate_pass_id"]),
